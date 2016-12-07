@@ -1,4 +1,5 @@
 from scipy import misc
+import cv2
 import matplotlib.pyplot as pl
 import numpy as np
 import random
@@ -15,7 +16,6 @@ class Image:
         """
         self.path = path
         self.res = res
-        self.shuffled = []
         self.read()
         self.resize()
 
@@ -45,7 +45,7 @@ class Image:
         random.shuffle(rand_list)
         imageArr = []
         count = 0
-
+        self.pic = []
         for x in range(0, len(lst) - 1):
             for y in range(0, len(lst) - 1):
                 imageArr.append(self.image[lst[x]:lst[x + 1], lst[y]:lst[y + 1]])
@@ -60,21 +60,25 @@ class Image:
 
         for x in range(0, divider):
             if x == 1:
-                self.shuffled = np.concatenate((img[x - 1], img[x]), axis=1)
+                self.pic = np.concatenate((img[x - 1], img[x]), axis=1)
             elif x > 1:
-                self.shuffled = np.concatenate((self.shuffled, img[x]), axis=1)
+                self.pic = np.concatenate((self.pic, img[x]), axis=1)
+
+    def edges(self):
+        self.pic = []
+        self.pic = cv2.Canny(self.image, 400, 600)
 
     def display(self):
         """
         Displays shuffled picture
         :return:
         """
-        pl.imshow(self.shuffled)
+        pl.imshow(self.pic)
         pl.axis('off')
         pl.show()
 
     def savepic(self):
-        misc.imsave("alex2.jpg", self.shuffled)
+        misc.imsave("alex2.jpg", self.pic)
 
     def __str__(self):
         """
@@ -86,6 +90,6 @@ class Image:
 if __name__ == "__main__":
     x = Image('alex.jpg', 1000)
     print(x)
-    x.shuffle(10)
+    x.edges()
     x.savepic()
     x.display()
