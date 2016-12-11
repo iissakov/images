@@ -90,6 +90,6 @@ class Image:
 if __name__ == "__main__":
     x = Image('alex.jpg', 1000)
     print(x)
-    x.edges()
+    x.shuffle(5)
     x.savepic()
     x.display()
